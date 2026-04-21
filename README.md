@@ -12,6 +12,7 @@ A Go-based **Retrieval-Augmented Generation (RAG)** assistant template, designed
 
 This template centers around **LangChain (langchaingo)**, implementing AI orchestration through a modular, service-based approach:
 - **LangChain Orchestration**: The **Processor** acts as a LangChain-style "Chain", orchestrating models, vector stores, and logic to handle semantic queries.
+- **Agentic Loop**: Supports iterative reasoning (Reasoning-Action-Observation), allowing the AI to call tools, observe results, and refine its answer in multiple turns.
 - **SBI (Service-Based Interface)**: Following 5G core network design patterns, the SBI exposes these LangChain-powered capabilities as robust, machine-readable services.
 - **Decoupled Components**: Leveraging LangChain's modularity, the system easily separates Data Indexing from Inference logic.
 
@@ -19,6 +20,7 @@ This template centers around **LangChain (langchaingo)**, implementing AI orches
 
 ## Key Features
 
+- **Agentic Loop Reasoning**: Multi-turn "thinking" loop that enables complex task execution through tool usage.
 - **Decoupled SBI Layer**: Professional project structure with clear separation between transmission, logic, and data.
 - **High-Performance RAG**: Powered by `langchaingo` for seamless document chunking and retrieval workflows.
 - **GitHub Models Integration**: Direct support for GPT-4o & text-embedding-3-small using OpenAI-compatible endpoints.
