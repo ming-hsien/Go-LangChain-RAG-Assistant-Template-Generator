@@ -17,6 +17,8 @@ services:
       - "8080:8080"
     env_file:
       - .env
+    environment:
+      - QDRANT_URL=http://qdrant:6333
     depends_on:
       - qdrant
     volumes:
