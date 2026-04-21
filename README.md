@@ -36,7 +36,7 @@ This template centers around **LangChain (langchaingo)**, implementing AI orches
 ### 2. Project Initialization
 Generate a new project from this template:
 ```bash
-./init.sh github.com/your-username/your-project-name [destination_directory]
+./gen.sh github.com/your-username/your-project-name [destination_directory]
 ```
 This script handles module renaming, import path refactoring, and directory preparation automatically.
 
@@ -75,8 +75,9 @@ go run cmd/app/main.go
 │   └── app/           # Main entry point (Wiring SBI + Processor + RAG)
 ├── internal/
 │   ├── sbi/           # Service-Based Interface (API Routing & Handlers)
-│   │   ├── processor/ # Internal Business Logic & Chain Orchestration
+│   │   ├── processor/ # Internal Business Logic & Agentic reasoning
 │   │   └── server.go  # Web Server & Static Asset Mounting
+│   ├── tools/         # Dynamic Tool Framework (Add tools here)
 │   ├── rag/           # Low-level RAG logic (Vector DB, Embedding, LLM)
 │   └── config/        # Configuration management
 ├── web/               # Decoupled Web Frontend (HTML, JS, Assets)
@@ -87,11 +88,23 @@ go run cmd/app/main.go
 
 ---
 
+## Quick Demo (Optional AI Agent features)
+This template includes a pre-built demo showcasing **Agentic Tool Calling** (System monitoring & File generation).
+- **To Install Demo**: `./demo.sh install` (This activates the demo files and logic).
+- **To Clean Demo**: `./demo.sh clean` (This completely removes demo files and reverts the project to a clean template state).
+
+### AI Agent Capabilities (Tools)
+When the **Quick Demo** is installed, the AI Agent gains the following multi-step reasoning capabilities:
+- **System Monitoring**: Access to real-time host memory and CPU load stats.
+- **Document Generation**: Ability to write new summary files directly into the `documents/` directory.
+
+---
+
 ## API Endpoints (SBI)
-- `POST /v1/query`: Submit a question to the Processor.
+- `POST /v1/query`: Submit a question to the Processor (supports RAG + Agent tools).
 - `POST /v1/index`: Trigger background re-indexing of the knowledge base.
 - `GET /v1/config`: Retrieve dynamic UI branding and system status.
-- `GET /v1/tools`: (Mock) Retrieve availability list for future AI Agents.
+- `GET /v1/tools`: Retrieve the list of currently registered AI Agent tools.
 
 ---
 

@@ -9,8 +9,8 @@ reset=$(tput sgr0)
 OLD_MODULE="github.com/ming-hsien/lang-chain-template"
 
 if [ -z "$1" ]; then
-    echo "Usage: ./init.sh <new_module_name> [destination_directory]"
-    echo "Example: ./init.sh github.com/my-org/my-project ./my-new-app"
+    echo "Usage: ./gen.sh <new_module_name> [destination_directory]"
+    echo "Example: ./gen.sh github.com/my-org/my-project ./my-new-app"
     exit 1
 fi
 
@@ -27,10 +27,12 @@ if [ -n "$DEST_DIR" ]; then
     echo "Creating destination directory: $DEST_DIR..."
     mkdir -p "$DEST_DIR"
     
-    echo "Copying template files (excluding .git and init.sh)..."
+    echo "Copying template files (excluding .git and gen.sh)..."
     cp -r . "$DEST_DIR"
     rm -rf "$DEST_DIR/.git"
-    rm "$DEST_DIR/init.sh"
+    rm "$DEST_DIR/gen.sh"
+    rm "$DEST_DIR/demo.sh"
+    rm -rf "$DEST_DIR/demo"
     
     cd "$DEST_DIR" || exit
 fi
