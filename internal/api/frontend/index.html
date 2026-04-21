@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="head-title">AI Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+        }
+
+        .glow-indigo {
+            box-shadow: 0 10px 40px rgba(79, 70, 229, 0.1);
+        }
+
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+
+        .message-ai {
+            background: linear-gradient(135deg, #f5f7ff 0%, #ffffff 100%);
+        }
+    </style>
+</head>
+
+<body class="text-slate-900 overflow-hidden h-screen flex flex-col bg-slate-50">
+    <!-- Background Accents -->
+    <div class="fixed top-0 left-0 w-full h-full -z-10 overflow-hidden">
+        <div class="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] bg-indigo-100/50 rounded-full blur-[100px]"></div>
+        <div class="absolute -bottom-[20%] -right-[10%] w-[60%] h-[60%] bg-blue-100/40 rounded-full blur-[100px]"></div>
+    </div>
+
+    <nav
+        class="h-16 flex items-center justify-between px-8 bg-white/70 border-b border-slate-200 backdrop-blur-md z-10">
+        <div class="flex items-center space-x-4">
+            <div
+                class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
+                <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+            </div>
+            <div>
+                <h1 id="app-header" class="font-bold text-lg leading-none text-slate-800">AI Assistant</h1>
+                <p class="text-[10px] text-indigo-500 uppercase tracking-widest mt-1 font-bold">Active Node: 0x4F2A</p>
+            </div>
+        </div>
+        <div class="flex items-center space-x-6">
+            <div class="flex flex-col items-end">
+                <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Vector DB</span>
+                <span class="text-xs text-green-600 font-semibold lowercase flex items-center">
+                    <span class="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse"></span>
+                    online
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="flex-1 flex overflow-hidden">
+        <!-- Sidebar -->
+        <aside class="w-72 bg-white/40 border-r border-slate-200 p-6 flex flex-col space-y-8 backdrop-blur-sm">
+            <div>
+                <label
+                    class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">Operations</label>
+                <div id="tools-list" class="space-y-2">
+                    <!-- Tools injected here -->
+                </div>
+            </div>
+            <div class="flex-1">
+                <label class="text-[10px] font-bold text-slate-400 uppercase tracking-widest block mb-4">Safety
+                    Protocols</label>
+                <div
+                    class="p-4 bg-white/80 border border-slate-100 rounded-2xl text-[11px] text-slate-600 space-y-3 shadow-sm">
+                    <div class="flex items-center justify-between">
+                        <span class="font-medium">Access Control</span>
+                        <span class="text-indigo-600 font-bold">ENABLED</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <span class="font-medium">CMS Guard</span>
+                        <span class="text-indigo-600 font-bold">ACTIVE</span>
+                    </div>
+                </div>
+            </div>
+            <button onclick="reindex()"
+                class="w-full py-4 bg-white hover:bg-slate-50 transition-all text-xs font-bold uppercase tracking-widest text-slate-700 rounded-2xl border border-slate-200 shadow-sm active:scale-[0.98]">
+                Re-Index Knowledge
+            </button>
+        </aside>
+
+        <!-- Chat -->
+        <section class="flex-1 flex flex-col items-center justify-end pb-12 relative bg-white/20">
+            <div id="chat-container"
+                class="w-full max-w-3xl flex-1 overflow-y-auto px-8 py-10 space-y-8 scrollbar-hide">
+                <!-- Initial Message -->
+                <div class="flex items-start">
+                    <div
+                        class="w-10 h-10 bg-indigo-600 shadow-md rounded-2xl flex items-center justify-center flex-shrink-0 text-white font-bold text-xs">
+                        AI</div>
+                    <div class="ml-4 max-w-[85%]">
+                        <div id="welcome-message"
+                            class="glass p-5 rounded-3xl rounded-tl-none text-slate-800 font-medium leading-relaxed shadow-xl text-sm">
+                            系統初始化完畢。我是您的 AI 助手。
+                            <br><br>
+                            已連結 **GitHub Models** 與 **Qdrant** 知識庫。我可以協助您查詢相關資訊或執行維運操作。
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="w-full max-w-3xl px-8 mt-4">
+                <div
+                    class="bg-white/90 p-2 rounded-[2rem] glow-indigo flex items-center border border-slate-200 shadow-xl backdrop-blur-md">
+                    <input id="user-input" type="text" placeholder="輸入指令或查詢核心網路架構..."
+                        class="flex-1 bg-transparent border-none focus:outline-none focus:ring-0 px-6 py-4 text-sm text-slate-800 placeholder-slate-400"
+                        onkeydown="if(event.key==='Enter') sendMessage()">
+                    <button id="send-btn" onclick="sendMessage()"
+                        class="bg-indigo-600 hover:bg-indigo-500 px-8 py-4 rounded-[1.5rem] font-bold text-sm transition-all shadow-lg shadow-indigo-200 active:scale-95 text-white">
+                        發送
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
