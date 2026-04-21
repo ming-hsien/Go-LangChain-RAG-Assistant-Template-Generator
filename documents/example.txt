@@ -1,4 +1,0 @@
-核心網路節點資訊：
-- Node ID: 0x4F2A, 名稱: Core-Switch-01, 狀態: 正常, IP: 10.0.0.1
-- Node ID: 0x7B92, 名稱: Gateway-Alpha, 狀態: 維護中, IP: 10.0.0.2
-- 目前網路拓撲：Star Topology, 核心節點為 0x4F2A。  

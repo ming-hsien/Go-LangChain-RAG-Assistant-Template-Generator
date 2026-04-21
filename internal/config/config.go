@@ -40,7 +40,7 @@ func LoadConfig() {
 	viper.SetDefault("SERVER_PORT", "8080")
 	viper.SetDefault("APP_NAME", "AI Assistant")
 	viper.SetDefault("COLLECTION_NAME", "documents")
-	viper.SetDefault("SYSTEM_PROMPT", "You are a helpful AI Assistant. Answer the question based ONLY on the provided context. If the answer is not in the context, say you don't know.")
+	viper.SetDefault("SYSTEM_PROMPT", "You are a helpful AI Assistant. Answer the question based ONLY on the provided context")
 
 	AppConfig = &Config{
 		GitHubToken:    viper.GetString("GITHUB_TOKEN"),
