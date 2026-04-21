@@ -173,7 +173,6 @@ func ensureCollection(qdrantURL string, collectionName string) error {
 		return nil
 	}
 
-	// Create collection
 	createURL := fmt.Sprintf("%s/collections/%s", qdrantURL, collectionName)
 	config := map[string]interface{}{
 		"vectors": map[string]interface{}{

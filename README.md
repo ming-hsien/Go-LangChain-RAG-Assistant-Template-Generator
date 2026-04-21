@@ -1,18 +1,29 @@
-# Generic RAG AI Assistant Template
+# Go-LangChain RAG Assistant Template
 
 [![Go Version](https://img.shields.io/badge/Go-1.26.2-blue.svg)](https://go.dev/)
+[![LangChainGo](https://img.shields.io/badge/Powered%20by-LangChainGo-green.svg)](https://github.com/tmc/langchaingo)
 [![Docker](https://img.shields.io/badge/Docker-Supported-blue.svg)](https://www.docker.com/)
+[![Architecture](https://img.shields.io/badge/Architecture-SBI--Processor--RAG-orange.svg)](#project-structure)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A Go-based **Retrieval-Augmented Generation (RAG)** template built with **LangChainGo**, **GitHub Models**, and **Qdrant**. Designed for rapid deployment of custom AI assistants with internal knowledge retrieval.
+A Go-based **Retrieval-Augmented Generation (RAG)** assistant template, designed with **LangChainGo** and following **SBI (Service-Based Interface)** architecture principles.
+
+## Architecture Concept: LangChain & SBI
+
+This template centers around **LangChain (langchaingo)**, implementing AI orchestration through a modular, service-based approach:
+- **LangChain Orchestration**: The **Processor** acts as a LangChain-style "Chain", orchestrating models, vector stores, and logic to handle semantic queries.
+- **SBI (Service-Based Interface)**: Following 5G core network design patterns, the SBI exposes these LangChain-powered capabilities as robust, machine-readable services.
+- **Decoupled Components**: Leveraging LangChain's modularity, the system easily separates Data Indexing from Inference logic.
+
+---
 
 ## Key Features
 
-- **High-Performance RAG**: Powered by `langchaingo` for seamless document chunking, embedding, and retrieval workflows.
-- **GitHub Models Integration**: Direct support for GitHub Marketplace models (GPT-4o & text-embedding-3-small) using standard OpenAI-compatible endpoints.
-- **Auto-Provisioning Vector Store**: Automatically checks and initializes Qdrant collections (CMS_documents) on startup.
-- **Modern Web Interface**: Built-in glassmorphism-style UI using TailwindCSS and vanilla JS.
-- **One-Click Deployment**: Dockerized multi-stage builds with Docker Compose for rapid environment setup.
+- **Decoupled SBI Layer**: Professional project structure with clear separation between transmission, logic, and data.
+- **High-Performance RAG**: Powered by `langchaingo` for seamless document chunking and retrieval workflows.
+- **GitHub Models Integration**: Direct support for GPT-4o & text-embedding-3-small using OpenAI-compatible endpoints.
+- **Independent Web Interface**: A modern glassmorphism UI located in a dedicated `/web` directory, decoupled from the API logic.
+- **One-Click Deployment**: Dockerized multi-stage builds with Docker Compose.
 
 ---
 
@@ -22,75 +33,65 @@ A Go-based **Retrieval-Augmented Generation (RAG)** template built with **LangCh
 - Get a Personal Access Token (PAT) from [GitHub Models](https://github.com/marketplace/models).
 - Ensure Docker and Docker Compose are installed.
 
-### 2. Project Initialization (Template Generator)
-To generate a new project from this template:
+### 2. Project Initialization
+Generate a new project from this template:
 ```bash
 ./init.sh github.com/your-username/your-project-name [destination_directory]
 ```
-- `<new_module_name>`: The Go module path for your new project.
-- `[destination_directory]` (Optional): Where to create the new project. If omitted, it will initialize in the current directory.
-
-This script will copy the files (excluding `.git`), update `go.mod`, and refactor all internal import paths automatically.
+This script handles module renaming, import path refactoring, and directory preparation automatically.
 
 ### 3. Configuration
 Copy the environment template and fill in your details:
 ```bash
 cp .env.example .env
 ```
-Edit `.env`:
-```env
-GITHUB_TOKEN=your_github_pat_here
-APP_NAME=My AI Assistant
-COLLECTION_NAME=my_documents
-SYSTEM_PROMPT=You are a helpful assistant...
-```
+Key parameters in `.env`:
+- `GITHUB_TOKEN`: Your GitHub Personal Access Token for Model API.
+- `APP_NAME`: Your AI assistant's name (displays on UI).
+- `COLLECTION_NAME`: Qdrant collection name for your knowledge base.
+- `SYSTEM_PROMPT`: Directs the AI's behavior and persona.
 
-### 3. Deploy with Docker Compose (Recommended)
+### 4. Deploy with Docker (Recommended)
 ```bash
 docker-compose up -d --build
 ```
-Once started, visit: `http://localhost:8080`
+Access the UI at: `http://localhost:8080/ui/`
 
-### 4. Local Development
+### 5. Local Development
 Ensure you have Go 1.26.2+ installed and Qdrant is running:
 ```bash
+# Start Qdrant container if not running
+docker run -d -p 6333:6333 qdrant/qdrant
+
+# Run the application
 go run cmd/app/main.go
 ```
-
----
 
 ## Project Structure
 
 ```text
 .
 ├── cmd/
-│   └── app/           # Main entry point (main.go)
+│   └── app/           # Main entry point (Wiring SBI + Processor + RAG)
 ├── internal/
-│   ├── api/           # Gin Web Server and static UI assets
-│   ├── config/        # Environment variable and config loader
-│   ├── promptmgr/     # (Placeholder) Prompt management logic
-│   └── rag/           # Core RAG logic (Vector Search, Embedding, LLM)
-├── documents/         # Place your .txt files here for indexing
-├── prompts/           # (Placeholder) Structured prompt templates
-├── Dockerfile         # Production-ready multi-stage Docker build
-└── docker-compose.yml # Service orchestration (App Core + Qdrant)
+│   ├── sbi/           # Service-Based Interface (API Routing & Handlers)
+│   │   ├── processor/ # Internal Business Logic & Chain Orchestration
+│   │   └── server.go  # Web Server & Static Asset Mounting
+│   ├── rag/           # Low-level RAG logic (Vector DB, Embedding, LLM)
+│   └── config/        # Configuration management
+├── web/               # Decoupled Web Frontend (HTML, JS, Assets)
+├── documents/         # Local knowledge base (.txt files)
+├── Dockerfile         # Multi-stage production build
+└── docker-compose.yml # Service orchestration
 ```
 
 ---
 
-## Operations
-
-### Knowledge Indexing
-Place your network configuration or guide files in the `documents/` folder, then click **"Re-Index Knowledge"** in the Web UI. The system will:
-1. Parse all documents.
-2. Chunk text using recursive splitting.
-3. Generate embeddings via OpenAI.
-4. Upsert vectors into Qdrant.
-
-### API Endpoints
-- `POST /v1/query`: Submit a question to get a RAG-powered answer.
-- `POST /v1/index`: Trigger a background re-indexing task.
-- `GET /v1/tools`: (Mock) Retrieve availability list of tools for AI Agents.
+## API Endpoints (SBI)
+- `POST /v1/query`: Submit a question to the Processor.
+- `POST /v1/index`: Trigger background re-indexing of the knowledge base.
+- `GET /v1/config`: Retrieve dynamic UI branding and system status.
+- `GET /v1/tools`: (Mock) Retrieve availability list for future AI Agents.
 
 ---
 
