@@ -22,12 +22,15 @@ A Go-based **Retrieval-Augmented Generation (RAG)** template built with **LangCh
 - Get a Personal Access Token (PAT) from [GitHub Models](https://github.com/marketplace/models).
 - Ensure Docker and Docker Compose are installed.
 
-### 2. Project Initialization (Re-branding)
-If you want to use this template for your own project and change the Go module name:
+### 2. Project Initialization (Template Generator)
+To generate a new project from this template:
 ```bash
-./init.sh github.com/your-username/your-project-name
+./init.sh github.com/your-username/your-project-name [destination_directory]
 ```
-This script will automatically update `go.mod` and all internal import paths.
+- `<new_module_name>`: The Go module path for your new project.
+- `[destination_directory]` (Optional): Where to create the new project. If omitted, it will initialize in the current directory.
+
+This script will copy the files (excluding `.git`), update `go.mod`, and refactor all internal import paths automatically.
 
 ### 3. Configuration
 Copy the environment template and fill in your details:
