@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/ming-hsien/lang-chain-template/internal/config"
+	"github.com/ming-hsien/lang-chain-template/internal/promptmgr"
 	"github.com/ming-hsien/lang-chain-template/internal/rag"
 	"github.com/ming-hsien/lang-chain-template/internal/tools"
 	"github.com/tmc/langchaingo/llms"
@@ -29,7 +30,7 @@ func (p *Processor) Ask(ctx context.Context, question string) (string, error) {
 	}
 
 	// 2. Prepare message history
-	systemPrompt := fmt.Sprintf("%s\n\nContext:\n%s", config.AppConfig.SystemPrompt, ragContext)
+	systemPrompt := fmt.Sprintf("%s\n\nContext:\n%s", promptmgr.GetSystemPrompt(), ragContext)
 	messages := []llms.MessageContent{
 		{
 			Role:  llms.ChatMessageTypeSystem,

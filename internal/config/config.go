@@ -16,7 +16,6 @@ type Config struct {
 	ServerPort     string `mapstructure:"SERVER_PORT"`
 	AppName        string `mapstructure:"APP_NAME"`
 	CollectionName string `mapstructure:"COLLECTION_NAME"`
-	SystemPrompt   string `mapstructure:"SYSTEM_PROMPT"`
 }
 
 var AppConfig *Config
@@ -50,7 +49,6 @@ func LoadConfig() {
 		ServerPort:     viper.GetString("SERVER_PORT"),
 		AppName:        viper.GetString("APP_NAME"),
 		CollectionName: viper.GetString("COLLECTION_NAME"),
-		SystemPrompt:   viper.GetString("SYSTEM_PROMPT"),
 	}
 
 	if AppConfig.GitHubToken == "" {
