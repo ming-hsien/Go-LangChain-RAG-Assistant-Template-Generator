@@ -18,7 +18,6 @@ FROM alpine:latest
 WORKDIR /app
 
 COPY --from=builder /app/app-core .
-COPY --from=builder /app/prompts ./prompts
 
 EXPOSE 8080
 
