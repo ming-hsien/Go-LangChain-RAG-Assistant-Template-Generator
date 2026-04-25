@@ -51,7 +51,6 @@ Key parameters in `.env`:
 - `GITHUB_TOKEN`: Your GitHub Personal Access Token for Model API.
 - `APP_NAME`: Your AI assistant's name (displays on UI).
 - `COLLECTION_NAME`: Qdrant collection name for your knowledge base.
-- `SYSTEM_PROMPT`: Directs the AI's behavior and persona.
 
 ### 4. Deploy with Docker (Recommended)
 ```bash
@@ -74,18 +73,25 @@ go run cmd/app/main.go
 ```text
 .
 ├── cmd/
-│   └── app/           # Main entry point (Wiring SBI + Processor + RAG)
+│   └── app/                 # Main entry point (Wiring SBI + Processor + RAG)
 ├── internal/
-│   ├── sbi/           # Service-Based Interface (API Routing & Handlers)
-│   │   ├── processor/ # Internal Business Logic & Agentic reasoning
-│   │   └── server.go  # Web Server & Static Asset Mounting
-│   ├── tools/         # Dynamic Tool Framework (Add tools here)
-│   ├── rag/           # Low-level RAG logic (Vector DB, Embedding, LLM)
-│   └── config/        # Configuration management
-├── web/               # Decoupled Web Frontend (HTML, JS, Assets)
-├── documents/         # Local knowledge base (.txt files)
-├── Dockerfile         # Multi-stage production build
-└── docker-compose.yml # Service orchestration
+│   ├── sbi/                 # Service-Based Interface (API Routing & Handlers)
+│   │   ├── processor/       # Internal Business Logic & Agentic reasoning
+│   │   └── server.go        # Web Server & Static Asset Mounting
+│   ├── service/             # Application Business Logic Layer
+│   ├── models/              # Data Structures & Domain Models
+│   ├── promptmgr/           # System Prompt Management
+│   │   ├── promptmgr.go     # System prompt manager
+│   │   └── system.txt       # System prompt (in-memory prompt)
+│   ├── tools/               # Dynamic Tool Framework (Add tools here)
+│   ├── rag/                 # Low-level RAG logic (Vector DB, Embedding, LLM)
+│   └── config/              # Configuration management
+├── pkg/
+│   └── logger/              # Structured Logging utility (logrus)
+├── web/                     # Decoupled Web Frontend (HTML, JS, Assets)
+├── documents/               # Local knowledge base (.txt files)
+├── Dockerfile               # Multi-stage production build
+└── docker-compose.yml       # Service orchestration
 ```
 
 ---
