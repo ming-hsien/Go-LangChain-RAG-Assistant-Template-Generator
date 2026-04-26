@@ -22,7 +22,7 @@ This template centers around **LangChain (langchaingo)**, implementing AI orches
 
 - **Agentic Loop Reasoning**: Multi-turn "thinking" loop that enables complex task execution through tool usage.
 - **Decoupled SBI Layer**: Professional project structure with clear separation between transmission, logic, and data.
-- **High-Performance RAG**: Powered by `langchaingo` for seamless document chunking and retrieval workflows.
+- **High-Performance RAG**: Powered by `langchaingo` with support for multiple document formats (**PDF**, **Markdown**, **Plain Text**).
 - **GitHub Models Integration**: Direct support for GPT-4o & text-embedding-3-small using OpenAI-compatible endpoints.
 - **Independent Web Interface**: A modern glassmorphism UI located in a dedicated `/web` directory, decoupled from the API logic.
 - **One-Click Deployment**: Dockerized multi-stage builds with Docker Compose.
@@ -89,7 +89,7 @@ go run cmd/app/main.go
 ├── pkg/
 │   └── logger/              # Structured Logging utility (logrus)
 ├── web/                     # Decoupled Web Frontend (HTML, JS, Assets)
-├── documents/               # Local knowledge base (.txt files)
+├── documents/               # Local knowledge base (.txt, .md, .pdf)
 ├── Dockerfile               # Multi-stage production build
 └── docker-compose.yml       # Service orchestration
 ```

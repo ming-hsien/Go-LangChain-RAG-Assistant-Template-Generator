@@ -19,6 +19,7 @@ import (
 	"github.com/tmc/langchaingo/textsplitter"
 	"github.com/tmc/langchaingo/vectorstores"
 	"github.com/tmc/langchaingo/vectorstores/qdrant"
+	"github.com/ledongthuc/pdf"
 )
 
 type RAGService struct {
@@ -96,14 +97,26 @@ func (s *RAGService) IndexDocuments(ctx context.Context, dirPath string) error {
 		filePath := filepath.Join(dirPath, entry.Name())
 		log.Printf("Indexing document: %s", filePath)
 
-		data, err := os.ReadFile(filePath)
-		if err != nil {
-			log.Printf("Error reading file %s: %v", filePath, err)
-			continue
+		var content string
+		ext := filepath.Ext(entry.Name())
+		if ext == ".pdf" {
+			var err error
+			content, err = readPdf(filePath)
+			if err != nil {
+				log.Printf("Error reading PDF %s: %v", filePath, err)
+				continue
+			}
+		} else {
+			data, err := os.ReadFile(filePath)
+			if err != nil {
+				log.Printf("Error reading file %s: %v", filePath, err)
+				continue
+			}
+			content = string(data)
 		}
 
 		doc := schema.Document{
-			PageContent: string(data),
+			PageContent: content,
 			Metadata: map[string]interface{}{
 				"source": entry.Name(),
 			},
@@ -124,6 +137,22 @@ func (s *RAGService) IndexDocuments(ctx context.Context, dirPath string) error {
 	}
 
 	return nil
+}
+
+func readPdf(path string) (string, error) {
+	f, r, err := pdf.Open(path)
+	if err != nil {
+		return "", err
+	}
+	defer f.Close()
+
+	var buf bytes.Buffer
+	b, err := r.GetPlainText()
+	if err != nil {
+		return "", err
+	}
+	buf.ReadFrom(b)
+	return buf.String(), nil
 }
 
 // Search retrieves relevant documents from the vector store
