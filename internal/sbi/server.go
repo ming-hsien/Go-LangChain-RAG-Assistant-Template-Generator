@@ -30,6 +30,7 @@ func (s *Server) setupRoutes() {
 	v1 := s.router.Group("/v1")
 	{
 		v1.POST("/query", s.handleQuery)
+		v1.DELETE("/history", s.handleClearHistory)
 		v1.GET("/tools", s.handleGetTools)
 		v1.POST("/index", s.handleReindex)
 		v1.GET("/config", s.handleGetConfig)

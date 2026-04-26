@@ -10,7 +10,8 @@ import (
 
 func (s *Server) handleQuery(c *gin.Context) {
 	var req struct {
-		Question string `json:"question" binding:"required"`
+		Question  string `json:"question" binding:"required"`
+		SessionID string `json:"session_id"`
 	}
 
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -18,13 +19,24 @@ func (s *Server) handleQuery(c *gin.Context) {
 		return
 	}
 
-	resp, err := s.processor.Ask(c.Request.Context(), req.Question)
+	resp, err := s.processor.Ask(c.Request.Context(), req.SessionID, req.Question)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"answer": resp})
+}
+
+func (s *Server) handleClearHistory(c *gin.Context) {
+	sessionID := c.Query("session_id")
+	if sessionID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "session_id is required"})
+		return
+	}
+
+	s.processor.ClearHistory(sessionID)
+	c.JSON(http.StatusOK, gin.H{"message": "History cleared"})
 }
 
 func (s *Server) handleGetTools(c *gin.Context) {

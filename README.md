@@ -21,6 +21,7 @@ This template centers around **LangChain (langchaingo)**, implementing AI orches
 ## Key Features
 
 - **Agentic Loop Reasoning**: Multi-turn "thinking" loop that enables complex task execution through tool usage.
+- **Conversation Context Memory**: Built-in session-based chat history for multi-turn dialogue persistence.
 - **Decoupled SBI Layer**: Professional project structure with clear separation between transmission, logic, and data.
 - **High-Performance RAG**: Powered by `langchaingo` with support for multiple document formats (**PDF**, **Markdown**, **Plain Text**).
 - **GitHub Models Integration**: Direct support for GPT-4o & text-embedding-3-small using OpenAI-compatible endpoints.
@@ -85,6 +86,7 @@ go run cmd/app/main.go
 │   │   └── system.txt       # System prompt (in-memory prompt)
 │   ├── tools/               # Dynamic Tool Framework (Add tools here)
 │   ├── rag/                 # Low-level RAG logic (Vector DB, Embedding, LLM)
+│   ├── history/             # Session-based chat history management
 │   └── config/              # Configuration management
 ├── pkg/
 │   └── logger/              # Structured Logging utility (logrus)
@@ -105,6 +107,7 @@ This template includes a pre-built demo showcasing **Agentic RAG + Tool Calling*
 1. **Access UI**: Open [http://localhost:8080/ui/](http://localhost:8080/ui/) in your browser.
 2. **Indexing**: Click the **"Index"** button (or call `POST /v1/index`) to load `company_rules.md` into the vector database.
 3. **Ask a Question**: Type your query in the chat interface.
+4. **Clear History**: Click the **"Clear Chat"** button in the sidebar to reset the session history.
 
 ### Sample Queries & Expected Result
 - **Query**: "I'm planning to take parental leave. Who should I get in touch with? Is he/she free to take a call at the moment?"
@@ -123,6 +126,7 @@ When the **Quick Demo** is installed, the AI Agent gains the following capabilit
 
 ## API Endpoints (SBI)
 - `POST /v1/query`: Submit a question to the Processor (supports RAG + Agent tools).
+- `DELETE /v1/history`: Clear chat history for a specific session ID.
 - `POST /v1/index`: Trigger background re-indexing of the knowledge base.
 - `GET /v1/config`: Retrieve dynamic UI branding and system status.
 - `GET /v1/tools`: Retrieve the list of currently registered AI Agent tools.

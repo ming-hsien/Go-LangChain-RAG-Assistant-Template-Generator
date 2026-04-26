@@ -1,3 +1,6 @@
+// Generate a simple session ID on load
+const session_id = 'session_' + Math.random().toString(36).substring(2, 11);
+
 async function sendMessage() {
     const input = document.getElementById('user-input');
     const container = document.getElementById('chat-container');
@@ -12,7 +15,10 @@ async function sendMessage() {
         const response = await fetch('/v1/query', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ question })
+            body: JSON.stringify({
+                question: question,
+                session_id: session_id
+            })
         });
         const data = await response.json();
         if (data.error) {
@@ -56,6 +62,22 @@ async function loadTools() {
         `).join('');
     } catch (e) {
         console.error("Failed to load tools", e);
+    }
+}
+
+async function clearHistory() {
+    try {
+        const response = await fetch(`/v1/history?session_id=${session_id}`, { method: 'DELETE' });
+        const data = await response.json();
+        if (data.message) {
+            const container = document.getElementById('chat-container');
+            const welcome = container.firstElementChild;
+            container.innerHTML = '';
+            if (welcome) container.appendChild(welcome);
+            console.log("Chat history cleared.");
+        }
+    } catch (e) {
+        console.error("Failed to clear history", e);
     }
 }
 
