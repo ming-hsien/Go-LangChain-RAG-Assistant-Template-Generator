@@ -80,6 +80,12 @@ func NewRAGService() (*RAGService, error) {
 }
 
 func (s *RAGService) IndexDocuments(ctx context.Context, dirPath string) error {
+	log.Printf("Resetting collection '%s' for re-indexing...", config.AppConfig.CollectionName)
+	_ = deleteCollection(config.AppConfig.QdrantURL, config.AppConfig.CollectionName)
+	if err := ensureCollection(config.AppConfig.QdrantURL, config.AppConfig.CollectionName); err != nil {
+		return fmt.Errorf("failed to recreate collection: %v", err)
+	}
+
 	entries, err := os.ReadDir(dirPath)
 	if err != nil {
 		return err
@@ -211,5 +217,22 @@ func ensureCollection(qdrantURL string, collectionName string) error {
 	}
 
 	log.Printf("Successfully created collection '%s'", collectionName)
+	return nil
+}
+
+func deleteCollection(qdrantURL string, collectionName string) error {
+	deleteURL := fmt.Sprintf("%s/collections/%s", qdrantURL, collectionName)
+	req, _ := http.NewRequest("DELETE", deleteURL, nil)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return fmt.Errorf("failed to delete collection: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusOK {
+		log.Printf("Successfully deleted collection '%s'", collectionName)
+	}
 	return nil
 }
