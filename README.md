@@ -97,14 +97,15 @@ go run cmd/app/main.go
 ---
 
 ## Quick Demo (Optional AI Agent features)
-This template includes a pre-built demo showcasing **Agentic Tool Calling** (System monitoring & File generation).
-- **To Install Demo**: `./demo.sh install` (This activates the demo files and logic).
+This template includes a pre-built demo showcasing **Agentic RAG + Tool Calling** (Office Routing Agent).
+- **To Install Demo**: `./demo.sh install` (This activates the demo files, layered architecture, and specialized system prompt).
 - **To Clean Demo**: `./demo.sh clean` (This completely removes demo files and reverts the project to a clean template state).
 
-### AI Agent Capabilities (Tools)
-When the **Quick Demo** is installed, the AI Agent gains the following multi-step reasoning capabilities:
-- **System Monitoring**: Access to real-time host memory and CPU load stats.
-- **Document Generation**: Ability to write new summary files directly into the `documents/` directory.
+### AI Agent Capabilities (Office Routing Demo)
+When the **Quick Demo** is installed, the AI Agent gains the following capabilities:
+- **Intelligent Routing (RAG)**: Automatically identifies the correct person to contact based on `company_rules.md` in the knowledge base.
+- **Real-time Status Check (Tool)**: Uses a specialized tool to check the "real-time" availability/busy status of employees before answering.
+- **Specialized Reasoning**: Follows strict office routing protocols defined in the embedded system prompt.
 
 ---
 
