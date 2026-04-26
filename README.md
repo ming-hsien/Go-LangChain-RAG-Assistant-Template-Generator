@@ -98,8 +98,20 @@ go run cmd/app/main.go
 
 ## Quick Demo (Optional AI Agent features)
 This template includes a pre-built demo showcasing **Agentic RAG + Tool Calling** (Office Routing Agent).
-- **To Install Demo**: `./demo.sh install` (This activates the demo files, layered architecture, and specialized system prompt).
-- **To Clean Demo**: `./demo.sh clean` (This completely removes demo files and reverts the project to a clean template state).
+- **To Run Demo**: `./demo.sh` (This activates demo files, specialized prompt, and starts Docker).
+- **To Clean Demo**: `./demo.sh clean` (This removes demo files and reverts to clean state).
+
+### Testing Steps
+1. **Access UI**: Open [http://localhost:8080/ui/](http://localhost:8080/ui/) in your browser.
+2. **Indexing**: Click the **"Index"** button (or call `POST /v1/index`) to load `company_rules.md` into the vector database.
+3. **Ask a Question**: Type your query in the chat interface.
+
+### Sample Queries & Expected Result
+- **Query**: "I'm planning to take parental leave. Who should I get in touch with? Is he/she free to take a call at the moment?"
+- **Expected Result**: 
+  - AI identifies **Carol (HR Manager)** from the knowledge base.
+  - AI calls the `CheckAvailability` tool to get a random real-time status.
+  - AI answers with Carol's contact info and her current availability.
 
 ### AI Agent Capabilities (Office Routing Demo)
 When the **Quick Demo** is installed, the AI Agent gains the following capabilities:
