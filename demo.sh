@@ -11,6 +11,7 @@ SOURCE_TOOLS="$PROJECT_ROOT/demo/tools"
 SOURCE_SERVICE="$PROJECT_ROOT/demo/service"
 SOURCE_CLIENT="$PROJECT_ROOT/demo/employee_status"
 SOURCE_PROMPT="$PROJECT_ROOT/demo/prompt/system.txt"
+SOURCE_KNOWLEDGE="$PROJECT_ROOT/demo/company_rules.md"
 
 # Target directories
 TARGET_TOOLS="$PROJECT_ROOT/internal/tools/demo"
@@ -56,8 +57,15 @@ if [ "$ACTION" == "install" ]; then
         sed -i '/import (/a \	'"$DEMO_IMPORT" "$MAIN_FILE"
         echo " - Demo import activated in $MAIN_FILE"
     fi
+
+    # 6. Install Knowledge Base
+    mkdir -p "$PROJECT_ROOT/documents"
+    if [ -f "$SOURCE_KNOWLEDGE" ]; then
+        cp "$SOURCE_KNOWLEDGE" "$PROJECT_ROOT/documents/company_rules.md"
+        echo " - Demo knowledge base installed to documents/."
+    fi
     
-    # 6. Build and Run with Docker
+    # 7. Build and Run with Docker
     echo "Starting Docker services..."
     docker compose up --build
 
@@ -98,7 +106,7 @@ elif [ "$ACTION" == "clean" ]; then
     echo "You are a helpful AI assistant." > "$TARGET_PROMPT"
     echo " - System prompt reset to default."
     
-    # 6. Clean documents (Optional: preserve company_rules if you want)
+    # 6. Clean documents
     rm -f documents/*.txt documents/*.md
     echo " - Knowledge base documents cleared."
 
