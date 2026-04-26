@@ -58,7 +58,8 @@ func NewRAGService() (*RAGService, error) {
 	}
 
 	// 4. Ensure Qdrant Collection exists
-	err = ensureCollection(config.AppConfig.QdrantURL, config.AppConfig.CollectionName)
+	collectionName := filepath.Base(config.AppConfig.DocumentsPath)
+	err = ensureCollection(config.AppConfig.QdrantURL, collectionName)
 	if err != nil {
 		return nil, fmt.Errorf("failed to ensure collection: %v", err)
 	}
@@ -66,7 +67,7 @@ func NewRAGService() (*RAGService, error) {
 	// 5. Initialize Qdrant
 	store, err := qdrant.New(
 		qdrant.WithURL(*qURL),
-		qdrant.WithCollectionName(config.AppConfig.CollectionName),
+		qdrant.WithCollectionName(collectionName),
 		qdrant.WithEmbedder(embedder),
 	)
 	if err != nil {
@@ -80,9 +81,10 @@ func NewRAGService() (*RAGService, error) {
 }
 
 func (s *RAGService) IndexDocuments(ctx context.Context, dirPath string) error {
-	log.Printf("Resetting collection '%s' for re-indexing...", config.AppConfig.CollectionName)
-	_ = deleteCollection(config.AppConfig.QdrantURL, config.AppConfig.CollectionName)
-	if err := ensureCollection(config.AppConfig.QdrantURL, config.AppConfig.CollectionName); err != nil {
+	collectionName := filepath.Base(config.AppConfig.DocumentsPath)
+	log.Printf("Resetting collection '%s' for re-indexing...", collectionName)
+	_ = deleteCollection(config.AppConfig.QdrantURL, collectionName)
+	if err := ensureCollection(config.AppConfig.QdrantURL, collectionName); err != nil {
 		return fmt.Errorf("failed to recreate collection: %v", err)
 	}
 

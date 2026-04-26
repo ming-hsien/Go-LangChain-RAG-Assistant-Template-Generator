@@ -124,7 +124,7 @@ func (p *Processor) ClearHistory(sessionID string) {
 }
 
 func (p *Processor) Reindex(ctx context.Context) error {
-	return p.ragSvc.IndexDocuments(ctx, "./documents")
+	return p.ragSvc.IndexDocuments(ctx, config.AppConfig.DocumentsPath)
 }
 
 func (p *Processor) GetInfo() map[string]interface{} {
